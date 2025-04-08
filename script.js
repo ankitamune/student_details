@@ -128,21 +128,23 @@ function toggleExperienceFields() {
 }
 document.getElementById("admissionForm").addEventListener("submit", function (e) {
   e.preventDefault();
-
-  const form = document.getElementById("admissionForm");
-  const formData = new FormData(form);
+  
+  const formData = new FormData(this);
 
   fetch("submit_form.php", {
     method: "POST",
     body: formData
   })
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("formResponse").innerHTML = `<p style="color: green;">${data}</p>`;
-      form.reset();
-    })
-    .catch(error => {
-      document.getElementById("formResponse").innerHTML = `<p style="color: red;">Something went wrong!</p>`;
-      console.error("Error:", error);
-    });
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message);
+    if (data.status === "success") {
+      document.getElementById("admissionForm").reset();
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("Something went wrong!");
+  });
 });
+
